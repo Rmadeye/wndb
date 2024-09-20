@@ -1,0 +1,8 @@
+params:
+  learning_rate: 0.001
+  batch_size: 32
+  epochs: 20
+  dense_1_units: 64
+  dense_2_units: 32
+  dropout_1: 0.3
+  dropout_2: 0.3

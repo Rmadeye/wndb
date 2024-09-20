@@ -1,0 +1,62 @@
+from pathlib import Path
+import yaml
+
+import wandb
+from tensorflow.keras.callbacks import Callback
+
+from spaceship.models.base_tf import SpaceshipModel
+from spaceship.data.data_processor import DataProcessor
+
+
+class WandbMetricsLogger(Callback):
+    def on_epoch_end(self, epoch, logs):
+        wandb.log(
+            {
+                "loss": logs["loss"],
+                "accuracy": logs["accuracy"],
+                "val_loss": logs["val_loss"],
+                "val_accuracy": logs["val_accuracy"],
+            }
+        )
+
+    def on_train_end(self, logs):
+        wandb.log({"final_loss": logs["loss"],
+                   "final_accuracy": logs["accuracy"]})
+
+
+def load_yaml_config(config_path: Path):
+    with open(config_path, "r") as file:
+        config = yaml.safe_load(file)
+
+    return config
+
+
+def train_model(data: DataProcessor, config=None):
+    wandb.init(
+        project="spaceship", config=config  
+    )  # nasz config yamla
+    model = SpaceshipModel()
+    cfg = config["params"]
+    X_train, X_test, y_train, y_test = data.prepare_dataset()
+    # breakpoint()
+    model.build_model()
+    model.train(
+        X_train=X_train,
+        y_train=y_train,
+        X_val=X_test,
+        y_val=y_test,
+        epochs=cfg["epochs"],
+        batch_size=cfg["batch_size"],
+        callbacks=[WandbMetricsLogger()],
+    )
+    loss, accuracy = model.evaluate(X_test, y_test)
+    print(f"Model accuracy: {accuracy}, loss: {loss}")
+    return model
+
+
+if __name__ == "__main__":
+    config = load_yaml_config(Path("hparams_nn.yaml"))
+    data_processor = DataProcessor(
+        data_path=Path("spaceship/data/train.csv"), shuffle=True
+    )
+    train_model(data_processor, config)

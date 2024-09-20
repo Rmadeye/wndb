@@ -1,0 +1,27 @@
+# Konfiguracja sweepu w WandB
+
+method: random  # Metoda przeszukiwania: random, grid, bayes
+
+metric:
+  name: accuracy  # Metryka do optymalizacji
+  goal: maximize  # Cel: maksymalizacja dokładności
+
+parameters:
+  actfn1:
+    values: ['relu', 'tanh', 'sigmoid']  # Funkcje aktywacji dla pierwszej warstwy
+  actfn2:
+    values: ['relu', 'tanh', 'sigmoid']  # Funkcje aktywacji dla drugiej warstwy
+  dropout1:
+    values: [0.1, 0.3]  # Wartości dropout dla pierwszej warstwy
+  dropout2:
+    values: [0.1, 0.3]
+  optimizer:
+    values: ['adam', 'sgd', 'rmsprop']  # Różne optymalizatory
+  loss:
+    values: ['binary_crossentropy', 'mean_squared_error']  # Funkcje straty
+  epochs:
+    values: [30]  # Różne liczby epok
+  batch_size:
+    values: [64, 256]  # Różne rozmiary partii
+  metrics:
+    values: [['accuracy']] # Różne metryki

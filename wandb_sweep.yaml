@@ -1,0 +1,16 @@
+method: bayes  # Możesz zmienić na grid lub random
+metric:
+  name: accuracy
+  goal: maximize
+parameters:
+  solver:
+    values: ['lbfgs', 'liblinear', 'sag']  # Różne solvery
+  max_iter:
+    min: 100
+    max: 1000
+  C:
+    distribution: uniform
+    min: 0.001
+    max: 10
+  penalty:
+    values: ['l2', 'none']

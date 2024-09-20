@@ -1,0 +1,24 @@
+method: bayes  # Można zmienić na grid lub random
+metric:
+  name: accuracy
+  goal: maximize
+parameters:
+  model_type:
+    values: ['LogisticRegression', 'RandomForest']  # Wybór modelu
+  solver:
+    values: ['lbfgs', 'liblinear', 'sag']  # Hiperparametry dla Logistic Regression
+  max_iter:
+    min: 100
+    max: 1000
+  C:
+    distribution: uniform
+    min: 0.01
+    max: 10
+  penalty:
+    values: ['l2', 'none']
+  n_estimators:
+    min: 10
+    max: 200  # Hiperparametry dla Random Forest
+  max_depth:
+    min: 3
+    max: 20
